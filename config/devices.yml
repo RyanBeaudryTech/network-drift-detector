@@ -1,0 +1,51 @@
+devices:
+- hostname: R1
+  device_type: cisco_iosxe
+  host: 192.168.1.145
+  port: 22
+  username: Ryan
+  password: cisco
+
+- hostname: R2
+  device_type: cisco_iosxe
+  host: 192.168.1.145
+  port: 2222
+  username: Ryan
+  password: cisco
+
+- hostname: R3
+  device_type: cisco_iosxe
+  host: 192.168.1.145
+  port: 2223
+  username: Ryan
+  password: cisco
+
+- hostname: R4
+  device_type: cisco_iosxe
+  host: 192.168.1.145
+  port: 2224
+  username: Ryan
+  password: cisco
+
+- hostname: R5
+  device_type: cisco_iosxe
+  host: 192.168.1.145
+  port: 2225
+  username: Ryan
+  password: cisco
+
+- hostname: R6
+  device_type: cisco_iosxe
+  host: 192.168.1.145
+  port: 2226
+  username: Ryan
+  password: cisco
+
+- hostname: R7
+  device_type: cisco_iosxe
+  host: 192.168.1.145
+  port: 2227
+  username: Ryan
+  password: cisco
+
+
