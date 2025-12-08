@@ -116,13 +116,10 @@ def save_diff(device, diffs):
 # -------------------------------------------------
 
 def load_ignore_rules():
-    print("DEBUG: Entering load_ignore_rules()")
 
     try:
         base_path = os.path.dirname(os.path.abspath(__file__))
         file_path = os.path.join(base_path, "ignore_rules.json")
-
-        print(f"DEBUG: Loading from: {file_path}")
 
         with open(file_path, "r") as f:
             raw = f.read()
