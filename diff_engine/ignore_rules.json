@@ -1,0 +1,9 @@
+{
+    "/routing_table": false,
+    "/arp_table": false,
+    "/interfaces": false,
+    "/bgp_neighbors": true,
+    "/timestamp": true,
+    "/uptime": true,
+    "/packets": true
+}

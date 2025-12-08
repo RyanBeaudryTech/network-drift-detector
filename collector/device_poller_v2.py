@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 CONFIG_FILE = "config/devices.yml"
-SNAPSHOT_DIR = "snapshots"
+SNAPSHOT_DIR = "diff_engine/snapshots"
 
 class DevicePoller:
     def __init__(self, config_file=CONFIG_FILE):
