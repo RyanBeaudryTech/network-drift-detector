@@ -8,6 +8,7 @@ from diff_utils import (
     save_diff,
     load_ignore_rules,
     filter_structured_diffs,
+    diff_text
 )
 
 SNAPSHOT_DIR = "snapshots"
@@ -67,14 +68,13 @@ def main():
 
         # Filter diffs using ignore rules
         filtered_diffs = filter_structured_diffs(diffs, rules)
-        print(filtered_diffs)
 
         if not filtered_diffs:
             print("✓ No drift detected")
             continue
 
         # Print human-readable filtered diff
-        #print(format_diffs(filtered_diffs))
+        print(format_diffs(filtered_diffs))
 
         # Save filtered diff to disk
         #save_diff(device, filtered_diffs)

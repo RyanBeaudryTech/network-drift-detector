@@ -2,12 +2,13 @@ import os
 import json
 from pathlib import Path
 
-from diff_utils import (
+from diff_utils_v2 import (
     diff_dicts,
     format_diffs,
     save_diff,
     load_ignore_rules,
     filter_structured_diffs,
+    text_diff
 )
 
 SNAPSHOT_DIR = "snapshots"
@@ -71,8 +72,31 @@ def main():
             print("✓ No drift detected")
             continue
 
-        # Print human-readable filtered diff
-        print(format_diffs(filtered_diffs))
+        # ------------------------------
+        # Print human-readable filtered diff with text_diff for large strings
+        # ------------------------------
+        for change in filtered_diffs:
+            path = change.get("path", "")
+            change_type = change.get("type")
+
+            print(f"--- {path} ---")
+
+            if change_type == "added":
+                print(f"Added: {change['new']}\n")
+            elif change_type == "removed":
+                print(f"Removed: {change['old']}\n")
+            elif change_type == "modified":
+                old_val = change.get("old")
+                new_val = change.get("new")
+
+                # If both old and new are strings, use text_diff
+                if isinstance(old_val, str) and isinstance(new_val, str):
+                    print(text_diff(old_val, new_val))
+                else:
+                    # For non-string values, just print normally
+                    print(f"Old: {old_val}")
+                    print(f"New: {new_val}\n")
+
 
         # Save filtered diff to disk
         save_diff(device, filtered_diffs)
