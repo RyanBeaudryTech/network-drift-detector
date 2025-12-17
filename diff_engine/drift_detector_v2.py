@@ -8,7 +8,8 @@ from diff_utils_v2 import (
     save_diff,
     load_ignore_rules,
     filter_structured_diffs,
-    text_diff
+    text_diff,
+    parse_routing_table
 )
 
 SNAPSHOT_DIR = "snapshots"
@@ -61,8 +62,36 @@ def main():
         prev_data = load_json(previous)
         new_data = load_json(latest)
 
-        # Compute structured diffs
-        diffs = diff_dicts(prev_data, new_data)
+        """
+        print("DEBUG RAW ROUTING TABLE (new):")
+        print(new_data["routing_table"])
+        """
+
+        # Preprocess routing table into structured dicts
+        if "routing_table" in prev_data:
+            prev_data["routing_table"] = parse_routing_table(prev_data["routing_table"])
+
+        if "routing_table" in new_data:
+            new_data["routing_table"] = parse_routing_table(new_data["routing_table"])
+
+        #debug 
+        """
+        print("DEBUG:::Old Parsed routes:", prev_data["routing_table"].keys())
+        print("DEBUG:::New Parsed routes:", new_data["routing_table"].keys())
+        """
+      
+        #diffs = diff_dicts(prev_data, new_data)
+        diffs = []
+
+        # ---- Routing table (structured diff) ----
+        if "routing_table" in prev_data and "routing_table" in new_data:
+            route_diffs = diff_dicts(
+                prev_data["routing_table"],
+                new_data["routing_table"],
+                path="/routing_table"
+            )
+            diffs.extend(route_diffs)
+
 
 
         # Filter diffs using ignore rules
@@ -96,10 +125,13 @@ def main():
                     # For non-string values, just print normally
                     print(f"Old: {old_val}")
                     print(f"New: {new_val}\n")
-
+                
 
         # Save filtered diff to disk
         save_diff(device, filtered_diffs)
+
+        #DEBUG
+        #break
 
 
 # ------------------------------

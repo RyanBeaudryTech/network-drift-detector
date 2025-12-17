@@ -1,6 +1,7 @@
 import json
 import os
 import difflib
+import re
 from datetime import datetime
 
 # Keys whose values should be diffed as raw text (line-by-line)
@@ -280,3 +281,65 @@ def filter_structured_diffs(diffs, rules):
         filtered.append(entry)
 
     return filtered
+
+
+# -------------------------------------------------
+# Routing table parser
+# -------------------------------------------------
+
+import re
+
+def parse_routing_table(raw_text):
+    """
+    Parse 'show ip route' output into a dict keyed by destination prefix.
+
+    Handles both:
+      - Routes with CIDR masks (10.1.10.0/24)
+      - Routes without masks (11.11.11.0 via Null0)
+
+    Volatile fields like route age are stripped so only
+    meaningful topology changes trigger drift.
+    """
+
+    routes = {}
+
+    if not isinstance(raw_text, str):
+        return routes
+
+    for line in raw_text.splitlines():
+        line = line.strip()
+
+        # Skip noise / headers
+        if not line:
+            continue
+        if "is subnetted" in line:
+            continue
+        if line.startswith((
+            "Codes:", "Gateway", "Routing", "Load", "Network"
+        )):
+            continue
+
+        # 1️⃣ Prefer CIDR-formatted prefixes
+        cidr_match = re.search(r"\b(\d+\.\d+\.\d+\.\d+/\d+)\b", line)
+
+        # 2️⃣ Fallback: plain IPv4 prefix (static routes, Null0, etc)
+        ip_match = re.search(r"\b(\d+\.\d+\.\d+\.\d+)\b", line)
+
+        if cidr_match:
+            prefix = cidr_match.group(1)
+        elif ip_match:
+            prefix = ip_match.group(1)
+        else:
+            continue
+
+        # Normalize volatile fields (route age)
+        normalized = re.sub(
+            r",\s*(\d+w\d+d|\d+:\d+:\d+)",
+            "",
+            line
+        )
+
+        routes[prefix] = normalized
+
+    return routes
+
