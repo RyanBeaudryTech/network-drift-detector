@@ -82,7 +82,7 @@ def diff_dicts(old, new, path=""):
 
     diffs = []
 
-    # Case 1: Both values are dictionaries → compare keys recursively
+    # Case 1: Both values are dictionaries -> compare keys recursively
     if isinstance(old, dict) and isinstance(new, dict):
         old_keys = set(old.keys())
         new_keys = set(new.keys())
@@ -109,7 +109,7 @@ def diff_dicts(old, new, path=""):
                 diff_dicts(old[key], new[key], f"{path}/{key}")
             )
 
-    # Case 2: Both values are lists → compare element-by-element
+    # Case 2: Both values are lists -> compare element-by-element
     elif isinstance(old, list) and isinstance(new, list):
         min_len = min(len(old), len(new))
 
@@ -151,8 +151,11 @@ def diff_dicts(old, new, path=""):
 # =================================================
 # Human-readable diff formatting
 # =================================================
+"""
+Function not being used currently
+
 def format_diffs(diffs):
-    """
+    #
     Converts structured diff records into a human-readable text format.
 
     This output is intended for:
@@ -162,7 +165,7 @@ def format_diffs(diffs):
 
     Note: This formatter is deliberately simple. More advanced formatting
     (e.g., section grouping or colorized output) can be layered on later.
-    """
+    #
 
     if not diffs:
         return "No drift detected.\n"
@@ -187,7 +190,7 @@ def format_diffs(diffs):
                 output.append(f"New: {change['new']}\n")
 
     return "\n".join(output)
-
+"""
 
 # =================================================
 # Persist structured diffs to disk
@@ -287,8 +290,6 @@ def filter_structured_diffs(diffs, rules):
 # Routing table parser
 # -------------------------------------------------
 
-import re
-
 def parse_routing_table(raw_text):
     """
     Parse 'show ip route' output into a dict keyed by destination prefix.
@@ -319,10 +320,10 @@ def parse_routing_table(raw_text):
         )):
             continue
 
-        # 1️⃣ Prefer CIDR-formatted prefixes
+        # Prefer CIDR-formatted prefixes
         cidr_match = re.search(r"\b(\d+\.\d+\.\d+\.\d+/\d+)\b", line)
 
-        # 2️⃣ Fallback: plain IPv4 prefix (static routes, Null0, etc)
+        # Fallback: plain IPv4 prefix (static routes, Null0, etc)
         ip_match = re.search(r"\b(\d+\.\d+\.\d+\.\d+)\b", line)
 
         if cidr_match:

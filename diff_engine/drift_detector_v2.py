@@ -4,7 +4,6 @@ from pathlib import Path
 
 from diff_utils_v2 import (
     diff_dicts,
-    format_diffs,
     save_diff,
     load_ignore_rules,
     filter_structured_diffs,
@@ -62,10 +61,6 @@ def main():
         prev_data = load_json(previous)
         new_data = load_json(latest)
 
-        """
-        print("DEBUG RAW ROUTING TABLE (new):")
-        print(new_data["routing_table"])
-        """
 
         # Preprocess routing table into structured dicts
         if "routing_table" in prev_data:
@@ -74,11 +69,6 @@ def main():
         if "routing_table" in new_data:
             new_data["routing_table"] = parse_routing_table(new_data["routing_table"])
 
-        #debug 
-        """
-        print("DEBUG:::Old Parsed routes:", prev_data["routing_table"].keys())
-        print("DEBUG:::New Parsed routes:", new_data["routing_table"].keys())
-        """
       
         #diffs = diff_dicts(prev_data, new_data)
         diffs = []
