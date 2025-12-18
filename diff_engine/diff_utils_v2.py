@@ -400,3 +400,54 @@ def parse_arp_table(raw_text):
         }
 
     return arp_entries
+
+
+def parse_interfaces(raw_output):
+    """
+    Parses 'show ip interface brief' output into a structured dictionary.
+
+    Returns:
+        {
+          "GigabitEthernet1": {
+              "ip": "10.0.13.1",
+              "admin_state": "up",
+              "oper_state": "up"
+          },
+          ...
+        }
+    """
+
+    interfaces = {}
+
+    if not isinstance(raw_output, str):
+        return interfaces
+
+    lines = raw_output.splitlines()
+
+    for line in lines:
+        # Skip header and empty lines
+        if not line.strip():
+            continue
+        if line.lower().startswith("interface"):
+            continue
+
+        # Split on whitespace (safe for this format)
+        parts = line.split()
+
+        # Expected columns:
+        # Interface | IP-Address | OK? | Method | Status | Protocol
+        if len(parts) < 6:
+            continue
+
+        iface = parts[0]
+        ip = parts[1]
+        admin_state = parts[4]
+        oper_state = parts[5]
+
+        interfaces[iface] = {
+            "ip": ip,
+            "admin_state": admin_state,
+            "oper_state": oper_state
+        }
+
+    return interfaces

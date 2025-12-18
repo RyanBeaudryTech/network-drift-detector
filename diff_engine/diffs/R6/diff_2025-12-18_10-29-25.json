@@ -1,0 +1,24 @@
+[
+  {
+    "path": "/routing_table/10.1.20.0/24",
+    "type": "added",
+    "new": "O IA     10.1.20.0/24 [110/6] via 10.2.46.4, GigabitEthernet0/0"
+  },
+  {
+    "path": "/routing_table/10.1.10.0/24",
+    "type": "added",
+    "new": "O IA     10.1.10.0/24 [110/6] via 10.2.46.4, GigabitEthernet0/0"
+  },
+  {
+    "path": "/routing_table/10.0.0.0/8",
+    "type": "modified",
+    "old": "10.0.0.0/8 is variably subnetted, 14 subnets, 2 masks",
+    "new": "10.0.0.0/8 is variably subnetted, 16 subnets, 2 masks"
+  },
+  {
+    "path": "/routing_table/10.3.7.0/24",
+    "type": "modified",
+    "old": "O        10.3.7.0/24 [110/2] via 10.3.67.7, GigabitEthernet0/2",
+    "new": "O        10.3.7.0/24 [110/2] via 10.3.67.7, 1d00h, GigabitEthernet0/2"
+  }
+]
