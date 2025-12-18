@@ -26,6 +26,9 @@ SEVERITY_RULES = [
 
 
 def classify_severity(change):
+    """
+    Determines severity level for a diff entry based on path and field.
+    """
     path = change.get("path", "")
     change_type = change.get("type")
 
@@ -33,12 +36,16 @@ def classify_severity(change):
     if path.startswith("/interfaces") and change_type in ("added", "removed"):
         return "HIGH"
 
-    # Field-based rules
+    # For modified interface fields, HIGH severity if it's admin_state or oper_state
+    if path.startswith("/interfaces") and change_type == "modified":
+        if path.endswith("admin_state") or path.endswith("oper_state"):
+            return "HIGH"
+
     for base_path, field, severity in SEVERITY_RULES:
         if path.startswith(base_path):
             if field is None:
                 return severity
-            if f"/{field}" in path:
+            if field in path:
                 return severity
 
     return "LOW"
@@ -448,8 +455,8 @@ def parse_interfaces_table(raw_text):
         {
             "GigabitEthernet0/0": {
                 "ip": "10.0.0.1",
-                "status": "up",
-                "protocol": "up"
+                "admin_state": "up",   # normalized admin state
+                "oper_state": "up"     # normalized protocol/operational state
             },
             ...
         }
@@ -465,17 +472,27 @@ def parse_interfaces_table(raw_text):
         if not line or line.startswith("Interface"):
             continue
 
-        # Split on whitespace (multiple spaces) to extract columns
         # Typical columns: Interface, IP-Address, OK?, Method, Status, Protocol
         parts = re.split(r'\s+', line)
         if len(parts) < 6:
             continue
 
         iface_name, ip, ok, method, status, protocol = parts[:6]
+
+        # Normalize admin state
+        if "administratively" in status.lower():
+            admin_state = "down"
+        else:
+            admin_state = status.lower()  # "up" or "down"
+
+        # Operational state comes from protocol column
+        oper_state = protocol.lower()  # usually "up" or "down"
+
         interfaces[iface_name] = {
             "ip": ip,
-            "status": status.lower(),      # normalize
-            "protocol": protocol.lower()   # normalize
+            "admin_state": admin_state,
+            "oper_state": oper_state
         }
 
     return interfaces
+

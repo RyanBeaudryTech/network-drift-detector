@@ -214,7 +214,7 @@ def main():
                         if len(parts) < 3:
                             continue
 
-                        iface = "/".join(parts[1:-1])  # join all except last part
+                        iface = "/".join(parts[1:-1])
                         field = parts[-1]
 
                         interfaces[iface][field] = change
@@ -224,21 +224,38 @@ def main():
                         details = []
 
                         # Admin state / status
-                        for f in ("admin_state", "status"):
-                            if f in fields:
-                                c = fields[f]
-                                details.append(f"admin {c['old']} → {c['new']}")
+                        if "admin_state" in fields:
+                            c = fields["admin_state"]
+                            old, new = c["old"], c["new"]
+                            # Only collapse when new state is admin shutdown
+                            if str(new).lower().startswith("administratively") and old != new:
+                                details.append("administratively down")
+                            else:
+                                details.append(f"admin {old} → {new}")
+                        elif "status" in fields:
+                            c = fields["status"]
+                            details.append(f"admin {c['old']} → {c['new']}")
 
                         # Operational state / protocol
-                        for f in ("oper_state", "protocol"):
-                            if f in fields:
-                                c = fields[f]
-                                details.append(f"oper {c['old']} → {c['new']}")
+                        if "oper_state" in fields:
+                            c = fields["oper_state"]
+                            old, new = c["old"], c["new"]
+                            if not any("administratively" in d.lower() for d in details):
+                                if old != new:
+                                    details.append(f"oper {old} → {new}")
+                        elif "protocol" in fields:
+                            c = fields["protocol"]
+                            old, new = c["old"], c["new"]
+                            if not any("administratively" in d.lower() for d in details):
+                                if old != new:
+                                    details.append(f"oper {old} → {new}")
 
                         if details:
                             print(f"* {iface}: " + ", ".join(details))
 
                     continue  # skip per-change printing
+
+
 
 
                 # ---------- NON-INTERFACE SECTIONS ----------

@@ -1,0 +1,7 @@
+[
+  {
+    "path": "/routing_table/10.3.7.0/24",
+    "type": "added",
+    "new": "O 10.3.7.0/24 [110/2] via 10.3.67.7, GigabitEthernet0/2"
+  }
+]
