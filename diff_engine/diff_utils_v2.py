@@ -11,6 +11,40 @@ TEXT_DIFF_KEYS = {
     "interfaces"
 }
 
+SEVERITY_RULES = [
+    # Interfaces
+    ("/interfaces", "status", "HIGH"),     # admin up/down
+    ("/interfaces", "protocol", "HIGH"),   # oper up/down
+    ("/interfaces", "ip", "MEDIUM"),
+
+    # Routing
+    ("/routing_table", None, "MEDIUM"),
+
+    # ARP
+    ("/arp_table", None, "LOW"),
+]
+
+
+def classify_severity(change):
+    path = change.get("path", "")
+    change_type = change.get("type")
+
+    # Added / removed interfaces are always HIGH
+    if path.startswith("/interfaces") and change_type in ("added", "removed"):
+        return "HIGH"
+
+    # Field-based rules
+    for base_path, field, severity in SEVERITY_RULES:
+        if path.startswith(base_path):
+            if field is None:
+                return severity
+            if f"/{field}" in path:
+                return severity
+
+    return "LOW"
+
+
+
 # -------------------------------------------------
 # Snapshot splitting (TEXT vs STRUCTURED)
 # -------------------------------------------------
@@ -298,7 +332,7 @@ def parse_routing_table(raw_text):
       - Routes with CIDR masks (10.1.10.0/24)
       - Routes without masks (11.11.11.0 via Null0)
 
-    Volatile fields like route age are stripped so only
+    Volatile fields like route age/timers are stripped so only
     meaningful topology changes trigger drift.
     """
 
@@ -313,18 +347,15 @@ def parse_routing_table(raw_text):
         # Skip noise / headers
         if not line:
             continue
-        if "is subnetted" in line:
+        if "is subnetted" in line or "variably subnetted" in line:
+            # skip summary routes entirely
             continue
-        if line.startswith((
-            "Codes:", "Gateway", "Routing", "Load", "Network"
-        )):
+        if line.startswith(("Codes:", "Gateway", "Routing", "Load", "Network")):
             continue
 
         # Prefer CIDR-formatted prefixes
         cidr_match = re.search(r"\b(\d+\.\d+\.\d+\.\d+/\d+)\b", line)
-
-        # Fallback: plain IPv4 prefix (static routes, Null0, etc)
-        ip_match = re.search(r"\b(\d+\.\d+\.\d+\.\d+)\b", line)
+        ip_match = re.search(r"\b(\d+\.\d+\.\d+\.\d+)\b", line)  # fallback
 
         if cidr_match:
             prefix = cidr_match.group(1)
@@ -333,16 +364,22 @@ def parse_routing_table(raw_text):
         else:
             continue
 
-        # Normalize volatile fields (route age)
+        # Strip volatile fields: route age, timers, etc.
+        # Matches 1w0d, 1d01h, 01:02:03, 1d02h, etc.
         normalized = re.sub(
-            r",\s*(\d+w\d+d|\d+:\d+:\d+)",
+            r",\s*(\d+w\d+d|\d+d\d+h|\d+d\d+m|\d+:\d+:\d+)",
             "",
             line
         )
 
+        # Also normalize multiple spaces and trailing commas
+        normalized = re.sub(r"\s+", " ", normalized).rstrip(",").strip()
+
         routes[prefix] = normalized
 
     return routes
+
+
 
 
 
@@ -402,52 +439,43 @@ def parse_arp_table(raw_text):
     return arp_entries
 
 
-def parse_interfaces(raw_output):
+
+def parse_interfaces_table(raw_text):
     """
-    Parses 'show ip interface brief' output into a structured dictionary.
+    Parse 'show ip interface brief' output into a structured dict.
 
     Returns:
         {
-          "GigabitEthernet1": {
-              "ip": "10.0.13.1",
-              "admin_state": "up",
-              "oper_state": "up"
-          },
-          ...
+            "GigabitEthernet0/0": {
+                "ip": "10.0.0.1",
+                "status": "up",
+                "protocol": "up"
+            },
+            ...
         }
     """
-
     interfaces = {}
 
-    if not isinstance(raw_output, str):
+    if not isinstance(raw_text, str):
         return interfaces
 
-    lines = raw_output.splitlines()
-
+    lines = raw_text.splitlines()
     for line in lines:
-        # Skip header and empty lines
-        if not line.strip():
-            continue
-        if line.lower().startswith("interface"):
+        line = line.strip()
+        if not line or line.startswith("Interface"):
             continue
 
-        # Split on whitespace (safe for this format)
-        parts = line.split()
-
-        # Expected columns:
-        # Interface | IP-Address | OK? | Method | Status | Protocol
+        # Split on whitespace (multiple spaces) to extract columns
+        # Typical columns: Interface, IP-Address, OK?, Method, Status, Protocol
+        parts = re.split(r'\s+', line)
         if len(parts) < 6:
             continue
 
-        iface = parts[0]
-        ip = parts[1]
-        admin_state = parts[4]
-        oper_state = parts[5]
-
-        interfaces[iface] = {
+        iface_name, ip, ok, method, status, protocol = parts[:6]
+        interfaces[iface_name] = {
             "ip": ip,
-            "admin_state": admin_state,
-            "oper_state": oper_state
+            "status": status.lower(),      # normalize
+            "protocol": protocol.lower()   # normalize
         }
 
     return interfaces

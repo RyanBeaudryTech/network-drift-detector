@@ -1,6 +1,7 @@
 import os
 import json
 from pathlib import Path
+from collections import defaultdict
 
 from diff_utils_v2 import (
     diff_dicts,
@@ -8,8 +9,11 @@ from diff_utils_v2 import (
     load_ignore_rules,
     filter_structured_diffs,
     text_diff,
-    parse_routing_table, parse_arp_table, parse_interfaces
+    parse_routing_table, parse_arp_table, parse_interfaces_table,
+    classify_severity
 )
+
+DEBUG = False
 
 SNAPSHOT_DIR = "snapshots"
 DIFF_DIR = "diffs"
@@ -78,10 +82,10 @@ def main():
 
         # Preprocess interface table
         if "interfaces" in prev_data:
-            prev_data["interfaces"] = parse_interfaces(prev_data["interfaces"])
+            prev_data["interfaces"] = parse_interfaces_table(prev_data["interfaces"])
 
         if "interfaces" in new_data:
-            new_data["interfaces"] = parse_interfaces(new_data["interfaces"])
+            new_data["interfaces"] = parse_interfaces_table(new_data["interfaces"])
 
 
         #diffs = diff_dicts(prev_data, new_data)
@@ -117,6 +121,14 @@ def main():
         # Filter diffs using ignore rules
         filtered_diffs = filter_structured_diffs(diffs, rules)
 
+        if DEBUG:
+            print("\n===== DEBUG: RAW DIFF OBJECTS =====")
+            for i, change in enumerate(filtered_diffs, 1):
+                print(f"\nDiff #{i}")
+                for k, v in change.items():
+                    print(f"  {k}: {v} (type={type(v)})")
+
+
         if not filtered_diffs:
             print("✓ No drift detected")
             continue
@@ -124,7 +136,7 @@ def main():
         # ------------------------------
         # Print human-readable filtered diff with text_diff for large strings
         # ------------------------------
-        for change in filtered_diffs:
+        """for change in filtered_diffs:
             path = change.get("path", "")
             change_type = change.get("type")
 
@@ -146,6 +158,114 @@ def main():
                     print(f"Old: {old_val}")
                     print(f"New: {new_val}\n")
                 
+        """
+
+        grouped = defaultdict(lambda: defaultdict(list))
+
+        for change in filtered_diffs:
+            severity = classify_severity(change)
+            if DEBUG:
+                    print("\n===== DEBUG: SEVERITY CLASSIFICATION =====")
+                    print(f"Path: {change.get('path')}")
+                    print(f"Type: {change.get('type')}")
+                    print(f"Old:  {change.get('old')} ({type(change.get('old'))})")
+                    print(f"New:  {change.get('new')} ({type(change.get('new'))})")
+                    print(f"→ Severity assigned: {severity}")
+
+            path = change.get("path", "")
+
+            if path.startswith("/interfaces"):
+                section = "Interfaces"
+            elif path.startswith("/routing_table"):
+                section = "Routing"
+            elif path.startswith("/arp_table"):
+                section = "ARP"
+            else:
+                section = "Other"
+
+            grouped[severity][section].append(change)
+
+        print("\n🔥 Drift Detected!\n")
+
+        for severity in ("HIGH", "MEDIUM", "LOW"):
+            if severity not in grouped:
+                continue
+
+            print(f"[{severity}]")
+            print("=" * 40)
+
+            for section, changes in grouped[severity].items():
+                print(f"\n{section}")
+                print("-" * 40)
+
+                # ---------- COLLAPSED INTERFACE OUTPUT ----------
+                if section == "Interfaces":
+                    interfaces = defaultdict(dict)
+
+                    # Collect changes first
+                    for change in changes:
+                        if change["type"] != "modified":
+                            continue
+
+                        path = change.get("path", "")
+                        parts = path.strip("/").split("/")
+
+                        # Expected: /interfaces/<iface>/<field>
+                        if len(parts) < 3:
+                            continue
+
+                        iface = "/".join(parts[1:-1])  # join all except last part
+                        field = parts[-1]
+
+                        interfaces[iface][field] = change
+
+                    # Print once per interface
+                    for iface, fields in interfaces.items():
+                        details = []
+
+                        # Admin state / status
+                        for f in ("admin_state", "status"):
+                            if f in fields:
+                                c = fields[f]
+                                details.append(f"admin {c['old']} → {c['new']}")
+
+                        # Operational state / protocol
+                        for f in ("oper_state", "protocol"):
+                            if f in fields:
+                                c = fields[f]
+                                details.append(f"oper {c['old']} → {c['new']}")
+
+                        if details:
+                            print(f"* {iface}: " + ", ".join(details))
+
+                    continue  # skip per-change printing
+
+
+                # ---------- NON-INTERFACE SECTIONS ----------
+                for change in changes:
+                    change_type = change["type"]
+                    old = change.get("old")
+                    new = change.get("new")
+
+                    if section == "ARP":
+                        if change_type == "added":
+                            print(f"+ ARP {new['mac']} on {new['interface']}")
+                        elif change_type == "removed":
+                            print(f"- ARP {old['mac']} on {old['interface']}")
+                    else:
+                        if change_type == "added":
+                            print(f"+ {new}")
+                        elif change_type == "removed":
+                            print(f"- {old}")
+                        elif change_type == "modified":
+                            print(f"* {old} → {new}")
+
+
+
+
+            print("")
+
+
 
         # Save filtered diff to disk
         save_diff(device, filtered_diffs)

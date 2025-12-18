@@ -1,0 +1,12 @@
+[
+  {
+    "path": "/routing_table/10.1.20.0/24",
+    "type": "removed",
+    "old": "O 10.1.20.0/24 [110/2] via 10.1.35.5, GigabitEthernet0/1"
+  },
+  {
+    "path": "/routing_table/10.1.10.0/24",
+    "type": "removed",
+    "old": "O 10.1.10.0/24 [110/2] via 10.1.35.5, GigabitEthernet0/1"
+  }
+]

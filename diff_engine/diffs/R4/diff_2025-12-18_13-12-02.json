@@ -1,0 +1,18 @@
+[
+  {
+    "path": "/routing_table/10.1.10.0/24",
+    "type": "removed",
+    "old": "O IA     10.1.10.0/24 [110/5] via 10.0.24.2, GigabitEthernet0/0"
+  },
+  {
+    "path": "/routing_table/10.1.20.0/24",
+    "type": "removed",
+    "old": "O IA     10.1.20.0/24 [110/5] via 10.0.24.2, GigabitEthernet0/0"
+  },
+  {
+    "path": "/routing_table/10.1.35.0/24",
+    "type": "modified",
+    "old": "O IA     10.1.35.0/24 [110/4] via 10.0.24.2, 1d01h, GigabitEthernet0/0",
+    "new": "O IA     10.1.35.0/24 [110/4] via 10.0.24.2, GigabitEthernet0/0"
+  }
+]

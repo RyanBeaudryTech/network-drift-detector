@@ -1,0 +1,78 @@
+[
+  {
+    "path": "/routing_table/10.1.10.1/32",
+    "type": "removed",
+    "old": "L 10.1.10.1/32 is directly connected, GigabitEthernet0/1.10"
+  },
+  {
+    "path": "/routing_table/10.1.10.0/24",
+    "type": "removed",
+    "old": "C 10.1.10.0/24 is directly connected, GigabitEthernet0/1.10"
+  },
+  {
+    "path": "/routing_table/10.1.20.0/24",
+    "type": "removed",
+    "old": "C 10.1.20.0/24 is directly connected, GigabitEthernet0/1.20"
+  },
+  {
+    "path": "/routing_table/10.1.20.1/32",
+    "type": "removed",
+    "old": "L 10.1.20.1/32 is directly connected, GigabitEthernet0/1.20"
+  },
+  {
+    "path": "/arp_table/10.1.20.1",
+    "type": "removed",
+    "old": {
+      "protocol": "Internet",
+      "mac": "5254.000b.90ad",
+      "type": "ARPA",
+      "interface": "GigabitEthernet0/1.20"
+    }
+  },
+  {
+    "path": "/arp_table/10.1.10.1",
+    "type": "removed",
+    "old": {
+      "protocol": "Internet",
+      "mac": "5254.000b.90ad",
+      "type": "ARPA",
+      "interface": "GigabitEthernet0/1.10"
+    }
+  },
+  {
+    "path": "/interfaces/GigabitEthernet0/1/protocol",
+    "type": "modified",
+    "old": "up",
+    "new": "down"
+  },
+  {
+    "path": "/interfaces/GigabitEthernet0/1/status",
+    "type": "modified",
+    "old": "up",
+    "new": "administratively"
+  },
+  {
+    "path": "/interfaces/GigabitEthernet0/1.20/protocol",
+    "type": "modified",
+    "old": "up",
+    "new": "down"
+  },
+  {
+    "path": "/interfaces/GigabitEthernet0/1.20/status",
+    "type": "modified",
+    "old": "up",
+    "new": "administratively"
+  },
+  {
+    "path": "/interfaces/GigabitEthernet0/1.10/protocol",
+    "type": "modified",
+    "old": "up",
+    "new": "down"
+  },
+  {
+    "path": "/interfaces/GigabitEthernet0/1.10/status",
+    "type": "modified",
+    "old": "up",
+    "new": "administratively"
+  }
+]
