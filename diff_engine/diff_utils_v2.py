@@ -344,3 +344,59 @@ def parse_routing_table(raw_text):
 
     return routes
 
+
+
+def parse_arp_table(raw_text):
+    """
+    Parses 'show ip arp' output into a structured dict keyed by IP address.
+
+    Example return:
+    {
+        "10.0.12.2": {
+            "mac": "aabb.cc00.1202",
+            "interface": "GigabitEthernet2",
+            "protocol": "Internet",
+            "type": "ARPA"
+        }
+    }
+    """
+
+    arp_entries = {}
+
+    if not raw_text or not isinstance(raw_text, str):
+        return arp_entries
+
+    lines = raw_text.splitlines()
+
+    for line in lines:
+        line = line.strip()
+
+        # Skip headers and empty lines
+        if (
+            not line
+            or line.startswith("Protocol")
+            or line.startswith("Address")
+        ):
+            continue
+
+        # Typical Cisco ARP line:
+        # Internet  10.0.12.2   1   aabb.cc00.1202  ARPA  GigabitEthernet2
+        parts = re.split(r"\s+", line)
+
+        if len(parts) < 6:
+            continue  # malformed line
+
+        protocol = parts[0]
+        ip = parts[1]
+        mac = parts[3]
+        arp_type = parts[4]
+        interface = parts[5]
+
+        arp_entries[ip] = {
+            "protocol": protocol,
+            "mac": mac,
+            "type": arp_type,
+            "interface": interface
+        }
+
+    return arp_entries

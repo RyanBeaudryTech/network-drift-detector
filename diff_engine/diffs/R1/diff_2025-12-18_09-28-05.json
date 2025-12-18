@@ -1,0 +1,62 @@
+[
+  {
+    "path": "/routing_table/10.0.34.0/24",
+    "type": "modified",
+    "old": "O        10.0.34.0/24 [110/2] via 10.0.13.3, GigabitEthernet1",
+    "new": "O        10.0.34.0/24 [110/2] via 10.0.13.3, 1d00h, GigabitEthernet1"
+  },
+  {
+    "path": "/routing_table/10.0.12.2",
+    "type": "modified",
+    "old": "[110/4] via 10.0.12.2, GigabitEthernet2",
+    "new": "[110/4] via 10.0.12.2, 1d00h, GigabitEthernet2"
+  },
+  {
+    "path": "/routing_table/10.2.46.0/24",
+    "type": "modified",
+    "old": "O IA     10.2.46.0/24 [110/3] via 10.0.13.3, GigabitEthernet1",
+    "new": "O IA     10.2.46.0/24 [110/3] via 10.0.13.3, 1d00h, GigabitEthernet1"
+  },
+  {
+    "path": "/routing_table/10.0.24.0/24",
+    "type": "modified",
+    "old": "O        10.0.24.0/24 [110/2] via 10.0.12.2, GigabitEthernet2",
+    "new": "O        10.0.24.0/24 [110/2] via 10.0.12.2, 1d00h, GigabitEthernet2"
+  },
+  {
+    "path": "/routing_table/10.0.84.0/24",
+    "type": "modified",
+    "old": "O        10.0.84.0/24 [110/3] via 10.0.13.3, GigabitEthernet1",
+    "new": "O        10.0.84.0/24 [110/3] via 10.0.13.3, 1d00h, GigabitEthernet1"
+  },
+  {
+    "path": "/routing_table/10.3.67.0/24",
+    "type": "modified",
+    "old": "O IA     10.3.67.0/24 [110/4] via 10.0.13.3, GigabitEthernet1",
+    "new": "O IA     10.3.67.0/24 [110/4] via 10.0.13.3, 1d00h, GigabitEthernet1"
+  },
+  {
+    "path": "/routing_table/10.1.10.0/24",
+    "type": "modified",
+    "old": "O IA     10.1.10.0/24 [110/3] via 10.0.13.3, GigabitEthernet1",
+    "new": "O IA     10.1.10.0/24 [110/3] via 10.0.13.3, 1d00h, GigabitEthernet1"
+  },
+  {
+    "path": "/routing_table/11.100.2.0",
+    "type": "modified",
+    "old": "O        11.100.2.0 [110/2] via 10.0.12.2, GigabitEthernet2",
+    "new": "O        11.100.2.0 [110/2] via 10.0.12.2, 1d00h, GigabitEthernet2"
+  },
+  {
+    "path": "/routing_table/10.1.35.0/24",
+    "type": "modified",
+    "old": "O IA     10.1.35.0/24 [110/2] via 10.0.13.3, GigabitEthernet1",
+    "new": "O IA     10.1.35.0/24 [110/2] via 10.0.13.3, 1d00h, GigabitEthernet1"
+  },
+  {
+    "path": "/routing_table/10.1.20.0/24",
+    "type": "modified",
+    "old": "O IA     10.1.20.0/24 [110/3] via 10.0.13.3, GigabitEthernet1",
+    "new": "O IA     10.1.20.0/24 [110/3] via 10.0.13.3, 1d00h, GigabitEthernet1"
+  }
+]

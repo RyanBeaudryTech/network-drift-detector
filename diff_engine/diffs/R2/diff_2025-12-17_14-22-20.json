@@ -1,0 +1,7 @@
+[
+  {
+    "path": "/routing_table/12.12.12.0",
+    "type": "added",
+    "new": "S        12.12.12.0 is directly connected, Null0"
+  }
+]

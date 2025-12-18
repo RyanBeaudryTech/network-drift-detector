@@ -8,7 +8,7 @@ from diff_utils_v2 import (
     load_ignore_rules,
     filter_structured_diffs,
     text_diff,
-    parse_routing_table
+    parse_routing_table, parse_arp_table
 )
 
 SNAPSHOT_DIR = "snapshots"
@@ -69,7 +69,14 @@ def main():
         if "routing_table" in new_data:
             new_data["routing_table"] = parse_routing_table(new_data["routing_table"])
 
-      
+        # Preprocess ARP table
+        if "arp_table" in prev_data:
+            prev_data["arp_table"] = parse_arp_table(prev_data["arp_table"])
+
+        if "arp_table" in new_data:
+            new_data["arp_table"] = parse_arp_table(new_data["arp_table"])
+
+
         #diffs = diff_dicts(prev_data, new_data)
         diffs = []
 
@@ -82,6 +89,14 @@ def main():
             )
             diffs.extend(route_diffs)
 
+        # ---- ARP table (structured diff) ----
+        if "arp_table" in prev_data and "arp_table" in new_data:
+            arp_diffs = diff_dicts(
+                prev_data["arp_table"],
+                new_data["arp_table"],
+                path="/arp_table"
+            )
+            diffs.extend(arp_diffs)
 
 
         # Filter diffs using ignore rules

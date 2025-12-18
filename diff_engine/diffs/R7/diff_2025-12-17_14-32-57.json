@@ -1,0 +1,8 @@
+[
+  {
+    "path": "/routing_table/13.13.13.0",
+    "type": "modified",
+    "old": "S        13.13.13.0 is directly connected, Null0",
+    "new": "S        13.13.13.0 [1/0] via 10.3.7.2"
+  }
+]
