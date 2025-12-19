@@ -65,7 +65,7 @@ Platform Assumptions
 
 While the current implementation is Cisco-focused, the project is structured so that support for additional vendors or platforms could be added by introducing new parsers without changing the core diff engine.
 
-![Lab Topology](network-topology.png)
+![Lab Topology](data/network-topology.PNG)
 
 
 ## Project Structure
