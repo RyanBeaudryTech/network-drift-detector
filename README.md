@@ -35,26 +35,30 @@ Network devices change frequently due to maintenance, automation, or human error
 
 ---
 
-Lab Topology and Platform Assumptions
+## Lab Topology and Platform Assumptions
 
 This project was developed and tested using a Cisco-based lab topology running IOS-style CLI output.
 (the same topology used in the routing table collector project)
 
-Topology Overview
-- Multiple routers interconnected across several subnets
-- Mix of routed point-to-point links and multi-access segments
-- Dynamic routing in use (OSPF), along with connected and local routes
-- Interfaces and ARP entries intentionally change during testing to validate drift detection
+The lab represents a **multi-site OSPF environment**, where:
 
-The topology is designed to simulate realistic operational scenarios such as:
-- Interfaces being administratively shut or re-enabled
-- Links going down and recovering
-- Routing and ARP tables changing as a result of topology events
+- Each “site” is an OSPF area
+- **Area 3** does *not* directly connect to the backbone, so an **OSPF Virtual Link** is used through Area 2
+- R1 serves as the **NAT Gateway** between CML and the home LAN
+- All routers authenticate via **RADIUS** (FreeRADIUS running on an Ubuntu VM)
+
+The topology includes:
+
+- **7 Cisco routers** (R1–R7)
+- **3 PCs** (Alpine Linux VMs inside CML)
+- **Structured OSPF area design**
+- **NAT + port-forwarding** for external SSH access
+- **Centralized RADIUS authentication**
 
 Platform Assumptions
 - Device output is based on Cisco IOS-style commands, including:
   - show ip route
-  - show ip arp
+  - show arp
   - show ip interface brief
 - Parsing logic is written specifically for Cisco-formatted CLI output
 - Interface naming, route formatting, and status fields reflect IOS conventions
