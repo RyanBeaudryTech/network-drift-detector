@@ -83,8 +83,6 @@ Main entry point for comparing snapshots, grouping diffs by severity, and produc
 ignore_rules.json  
 Defines sections or paths of the data model that should be suppressed during drift detection.
 
-README.md  
-Documentation specific to the diff engine module.
 ---
 
 ## How It Works
