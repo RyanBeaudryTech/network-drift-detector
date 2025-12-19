@@ -1,7 +1,0 @@
-[
-  {
-    "path": "/routing_table/10.3.7.0/24",
-    "type": "removed",
-    "old": "O IA 10.3.7.0/24 [110/5] via 10.1.35.3, GigabitEthernet0/0"
-  }
-]

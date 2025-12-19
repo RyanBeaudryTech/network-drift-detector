@@ -234,6 +234,7 @@ def load_ignore_rules():
 # =================================================
 # Apply ignore rules to structured diffs
 # =================================================
+
 def filter_structured_diffs(diffs, rules):
     """
     Filters structured diff records based on ignore rules.
@@ -247,14 +248,18 @@ def filter_structured_diffs(diffs, rules):
       This preserves full visibility internally while allowing
       selective suppression of noise at reporting time.
     """
-
     filtered = []
 
     for entry in diffs:
         path = entry.get("path", "")
 
-        # If a rule exists for this path and explicitly disables it, skip
-        if path in rules and rules[path] is False:
+        ignored = False
+        for rule_path, enabled in rules.items():
+            if not enabled and path.startswith(rule_path):
+                ignored = True
+                break
+
+        if ignored:
             continue
 
         filtered.append(entry)
