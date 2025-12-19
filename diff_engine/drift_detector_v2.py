@@ -8,12 +8,10 @@ from diff_utils_v2 import (
     save_diff,
     load_ignore_rules,
     filter_structured_diffs,
-    text_diff,
     parse_routing_table, parse_arp_table, parse_interfaces_table,
     classify_severity
 )
 
-DEBUG = False
 
 SNAPSHOT_DIR = "snapshots"
 DIFF_DIR = "diffs"
@@ -88,7 +86,6 @@ def main():
             new_data["interfaces"] = parse_interfaces_table(new_data["interfaces"])
 
 
-        #diffs = diff_dicts(prev_data, new_data)
         diffs = []
 
         # ---- Routing table (structured diff) ----
@@ -121,13 +118,6 @@ def main():
         # Filter diffs using ignore rules
         filtered_diffs = filter_structured_diffs(diffs, rules)
 
-        if DEBUG:
-            print("\n===== DEBUG: RAW DIFF OBJECTS =====")
-            for i, change in enumerate(filtered_diffs, 1):
-                print(f"\nDiff #{i}")
-                for k, v in change.items():
-                    print(f"  {k}: {v} (type={type(v)})")
-
 
         if not filtered_diffs:
             print("✓ No drift detected")
@@ -136,41 +126,12 @@ def main():
         # ------------------------------
         # Print human-readable filtered diff with text_diff for large strings
         # ------------------------------
-        """for change in filtered_diffs:
-            path = change.get("path", "")
-            change_type = change.get("type")
-
-            print(f"--- {path} ---")
-
-            if change_type == "added":
-                print(f"Added: {change['new']}\n")
-            elif change_type == "removed":
-                print(f"Removed: {change['old']}\n")
-            elif change_type == "modified":
-                old_val = change.get("old")
-                new_val = change.get("new")
-
-                # If both old and new are strings, use text_diff
-                if isinstance(old_val, str) and isinstance(new_val, str):
-                    print(text_diff(old_val, new_val))
-                else:
-                    # For non-string values, just print normally
-                    print(f"Old: {old_val}")
-                    print(f"New: {new_val}\n")
-                
-        """
+        
 
         grouped = defaultdict(lambda: defaultdict(list))
 
         for change in filtered_diffs:
             severity = classify_severity(change)
-            if DEBUG:
-                    print("\n===== DEBUG: SEVERITY CLASSIFICATION =====")
-                    print(f"Path: {change.get('path')}")
-                    print(f"Type: {change.get('type')}")
-                    print(f"Old:  {change.get('old')} ({type(change.get('old'))})")
-                    print(f"New:  {change.get('new')} ({type(change.get('new'))})")
-                    print(f"→ Severity assigned: {severity}")
 
             path = change.get("path", "")
 
@@ -287,12 +248,6 @@ def main():
         # Save filtered diff to disk
         save_diff(device, filtered_diffs)
 
-        #DEBUG
-        #break
 
-
-# ------------------------------
-# Entry point
-# ------------------------------
 if __name__ == "__main__":
     main()

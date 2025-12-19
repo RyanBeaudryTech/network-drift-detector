@@ -2,9 +2,9 @@
 
 This project is a Python-based network automation tool designed to detect configuration and state drift across network devices by comparing structured snapshots over time.
 
-Instead of relying on raw CLI text diffs, this tool parses command output into structured data and highlights meaningful changes to interfaces, routing, and ARP tables.
+This tool parses command output into structured data and highlights meaningful changes to interfaces, routing, and ARP tables.
 
-This project was built and tested using a network lab environment and is intended as a portfolio project demonstrating real-world network automation and operational thinking.
+This project was built and tested using a network lab environment in Cisco CML and is intended as a portfolio project demonstrating real-world network automation and operational thinking.
 
 ---
 
@@ -22,7 +22,7 @@ Network devices change frequently due to maintenance, automation, or human error
 ## Features
 
 - Snapshot-based comparison per device
-- Structured diffs instead of raw text comparison
+- Structured JSON diffs instead of raw text comparison
 - Supports:
   - Interfaces
   - Routing table
@@ -31,8 +31,6 @@ Network devices change frequently due to maintenance, automation, or human error
   - HIGH (interface state changes)
   - MEDIUM (routing changes)
   - LOW (ARP changes)
-- Collapsed interface events (admin and operational state shown together)
-- Ignore rules to suppress expected or noisy changes
 - Diff results saved for auditing and review
 
 ---
@@ -73,25 +71,41 @@ Network devices change frequently due to maintenance, automation, or human error
 ---
 
 ## Example Output
+<pre>
+Comparing snapshots for R5:
+Previous: 2025-12-18_16-44-46.json
+Latest:   2025-12-18_16-46-29.json
 
-Drift Detected
+🔥 Drift Detected!
 
 [HIGH]
+========================================
 
-Interfaces  
-- GigabitEthernet0/1: admin down -> up, oper down -> up
+Interfaces
+----------------------------------------
+* GigabitEthernet0/1.20: admin up → down, oper up → down
+* GigabitEthernet0/1: admin up → down, oper up → down
+* GigabitEthernet0/1.10: admin up → down, oper up → down
 
 [MEDIUM]
+========================================
 
-Routing  
-- C 10.3.7.0/24 is directly connected, GigabitEthernet0/1  
-- L 10.3.7.1/32 is directly connected, GigabitEthernet0/1  
+Routing
+----------------------------------------
+- C 10.1.10.0/24 is directly connected, GigabitEthernet0/1.10
+- L 10.1.10.1/32 is directly connected, GigabitEthernet0/1.10
+- L 10.1.20.1/32 is directly connected, GigabitEthernet0/1.20
+- C 10.1.20.0/24 is directly connected, GigabitEthernet0/1.20
 
 [LOW]
+========================================
 
-ARP  
-- ARP 5254.0014.3185 on GigabitEthernet0/1  
+ARP
+----------------------------------------
+- ARP 5254.000b.90ad on GigabitEthernet0/1.20
+- ARP 5254.000b.90ad on GigabitEthernet0/1.10
 
+</pre>
 ---
 
 ## Testing in a Lab Environment

@@ -53,28 +53,6 @@ def classify_severity(change):
 
 
 # -------------------------------------------------
-# Snapshot splitting (TEXT vs STRUCTURED)
-# -------------------------------------------------
-
-def split_snapshot(snapshot):
-    """
-    Splits a snapshot dictionary into:
-    - text_sections: keys whose values should be diffed line-by-line
-    - structured_sections: everything else
-    """
-    text_sections = {}
-    structured_sections = {}
-
-    for key, value in snapshot.items():
-        if key in TEXT_DIFF_KEYS and isinstance(value, str):
-            text_sections[key] = value
-        else:
-            structured_sections[key] = value
-
-    return text_sections, structured_sections
-
-
-# -------------------------------------------------
 # Helper: Line-by-line unified diff for large text blocks
 # -------------------------------------------------
 def text_diff(old, new):
@@ -189,49 +167,6 @@ def diff_dicts(old, new, path=""):
     return diffs
 
 
-# =================================================
-# Human-readable diff formatting
-# =================================================
-"""
-Function not being used currently
-
-def format_diffs(diffs):
-    #
-    Converts structured diff records into a human-readable text format.
-
-    This output is intended for:
-      - console display
-      - log files
-      - basic audit review
-
-    Note: This formatter is deliberately simple. More advanced formatting
-    (e.g., section grouping or colorized output) can be layered on later.
-    #
-
-    if not diffs:
-        return "No drift detected.\n"
-
-    output = ["\n🔥 Drift Detected!\n"]
-
-    for change in diffs:
-        path = change["path"]
-        output.append(f"--- {path} ---")
-
-        if change["type"] == "added":
-            output.append(f"Added: {change['new']}\n")
-        elif change["type"] == "removed":
-            output.append(f"Removed: {change['old']}\n")
-        elif change["type"] == "modified":
-            # Use line-by-line diff for large text blocks
-            if path in LINE_BY_LINE_PATHS and isinstance(change["old"], str) and isinstance(change["new"], str):
-                output.append(text_diff(change["old"], change["new"]))
-                output.append("")  # extra newline
-            else:
-                output.append(f"Old: {change['old']}")
-                output.append(f"New: {change['new']}\n")
-
-    return "\n".join(output)
-"""
 
 # =================================================
 # Persist structured diffs to disk
