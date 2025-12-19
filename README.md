@@ -57,22 +57,21 @@ network-drift-detector/
 
 Description of Key Components
 
-collector/
-
+**collector/**
 Contains the polling logic responsible for connecting to network devices and collecting raw CLI output.
 device_poller_v2.py retrieves state such as routing tables, ARP tables, and interface status, and saves snapshots for later comparison.
 
-config/
+**config/**
 Holds configuration files used by the collector.
 devices.yml defines the devices to poll, including connection parameters.
 
-diff_engine/
+**diff_engine/**
 Core logic for detecting and presenting network drift.
 
-snapshots/
+**snapshots/**
 Stores timestamped JSON snapshots of device state.
 
-diffs/
+**diffs/**
 Stores generated diff results for auditing and historical reference.
 
 diff_utils_v2.py
