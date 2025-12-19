@@ -58,6 +58,7 @@ network-drift-detector/
 Description of Key Components
 
 collector/
+
 Contains the polling logic responsible for connecting to network devices and collecting raw CLI output.
 device_poller_v2.py retrieves state such as routing tables, ARP tables, and interface status, and saves snapshots for later comparison.
 
