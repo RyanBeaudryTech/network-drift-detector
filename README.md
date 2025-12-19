@@ -35,6 +35,33 @@ Network devices change frequently due to maintenance, automation, or human error
 
 ---
 
+Lab Topology and Platform Assumptions
+
+This project was developed and tested using a Cisco-based lab topology running IOS-style CLI output.
+(the same topology used in the routing table collector project)
+
+Topology Overview
+- Multiple routers interconnected across several subnets
+- Mix of routed point-to-point links and multi-access segments
+- Dynamic routing in use (OSPF), along with connected and local routes
+- Interfaces and ARP entries intentionally change during testing to validate drift detection
+
+The topology is designed to simulate realistic operational scenarios such as:
+- Interfaces being administratively shut or re-enabled
+- Links going down and recovering
+- Routing and ARP tables changing as a result of topology events
+
+Platform Assumptions
+- Device output is based on Cisco IOS-style commands, including:
+  - show ip route
+  - show ip arp
+  - show ip interface brief
+- Parsing logic is written specifically for Cisco-formatted CLI output
+- Interface naming, route formatting, and status fields reflect IOS conventions
+
+While the current implementation is Cisco-focused, the project is structured so that support for additional vendors or platforms could be added by introducing new parsers without changing the core diff engine.
+
+
 ## Project Structure
 <pre>
 network-drift-detector/
