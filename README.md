@@ -36,7 +36,7 @@ Network devices change frequently due to maintenance, automation, or human error
 ---
 
 ## Project Structure
-
+<pre>
 network-drift-detector/
 │
 ├── collector/
@@ -53,7 +53,7 @@ network-drift-detector/
 │   ├── drift_detector_v2.py
 │   ├── ignore_rules.json
 │   └── README.md
-
+</pre>
 
 Description of Key Components
 
