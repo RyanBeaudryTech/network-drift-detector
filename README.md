@@ -37,16 +37,54 @@ Network devices change frequently due to maintenance, automation, or human error
 
 ## Project Structure
 
-- snapshots/  
-  - Per-device snapshot history stored as JSON  
-- diffs/  
-  - Saved drift results per device  
-- diff_engine/  
-  - drift_detector_v2.py  
-  - diff_utils_v2.py  
-  - ignore_rules.json  
-- README.md  
+network-drift-detector/
+│
+├── collector/
+│   └── device_poller_v2.py
+│
+├── config/
+│   └── devices.yml
+│
+├── diff_engine/
+│   ├── __pycache__/
+│   ├── diffs/
+│   ├── snapshots/
+│   ├── diff_utils_v2.py
+│   ├── drift_detector_v2.py
+│   ├── ignore_rules.json
+│   └── README.md
 
+
+Description of Key Components
+
+collector/
+Contains the polling logic responsible for connecting to network devices and collecting raw CLI output.
+device_poller_v2.py retrieves state such as routing tables, ARP tables, and interface status, and saves snapshots for later comparison.
+
+config/
+Holds configuration files used by the collector.
+devices.yml defines the devices to poll, including connection parameters.
+
+diff_engine/
+Core logic for detecting and presenting network drift.
+
+snapshots/
+Stores timestamped JSON snapshots of device state.
+
+diffs/
+Stores generated diff results for auditing and historical reference.
+
+diff_utils_v2.py
+Contains parsing logic, structured diff generation, severity classification, and ignore-rule filtering.
+
+drift_detector_v2.py
+Main entry point for comparing snapshots, grouping diffs by severity, and producing human-readable output.
+
+ignore_rules.json
+Defines sections or paths of the data model that should be suppressed during drift detection.
+
+README.md
+Documentation specific to the diff engine module.
 ---
 
 ## How It Works
@@ -135,16 +173,6 @@ Rules allow you to ignore specific paths or entire sections to reduce false posi
 - Reduce noise while highlighting meaningful change
 - Produce output that is easy to scan during incidents
 - Reflect real-world network operations workflows
-
----
-
-## Possible Future Enhancements
-
-- Snapshot collection via SSH using Netmiko or Paramiko
-- Support for additional protocols such as BGP and OSPF
-- Export results as JSON, Markdown, or HTML
-- Exit codes for CI or monitoring integration
-- Historical drift trend analysis
 
 ---
 
