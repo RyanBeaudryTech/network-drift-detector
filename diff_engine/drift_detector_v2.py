@@ -42,9 +42,6 @@ def main():
 
     # Load ignore rules
     rules = load_ignore_rules()  # looks for ignore_rules.json in project root
-    #debug
-    print("DEBUG ignore rules:", rules)
-
 
     for device in os.listdir(SNAPSHOT_DIR):
         device_path = Path(SNAPSHOT_DIR) / device
