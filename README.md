@@ -63,21 +63,26 @@ Example structure:
 
 ```yaml
 devices:
-  - name: R1
-    host: 10.0.0.1
-    platform: cisco_iosxe
-    username: admin
-    password: admin
-    transport: ssh2
+- hostname: R1
+  device_type: cisco_iosxe
+  host: 10.0.0.1
+  port: 22
+  username: admin
+  password: admin
 
-  - name: R2
-    host: 10.0.0.2
-    platform: cisco_iosxe
-    username: admin
-    password: admin
-    transport: ssh2
+- hostname: R2
+  device_type: cisco_iosxe
+  host: 10.0.0.2
+  port: 22
+  username: admin
+  password: admin
 ```
 You can modify this file to match your own lab topology or device credentials.
+
+### Ignore Rules
+
+Expected or noisy changes can be filtered using `ignore_rules.json`.  
+Rules allow you to ignore specific paths or entire sections to reduce false positives.
 
 ## Features
 
@@ -139,13 +144,13 @@ network-drift-detector/
 │   └── devices.yml
 │
 ├── diff_engine/
-│   ├── __pycache__/
-│   ├── diffs/
 │   ├── snapshots/
 │   ├── diff_utils_v2.py
 │   ├── drift_detector_v2.py
-│   ├── ignore_rules.json
-│   └── README.md
+│   └── ignore_rules.json
+│
+├── diffs/
+├── README.md
 </pre>
 
 Description of Key Components
@@ -246,24 +251,6 @@ Recommended test scenarios:
 - Clear ARP entries
 - Change interface IP addressing
 - Introduce known changes and suppress them using ignore rules
-
----
-
-## Configuration
-
-### Ignore Rules
-
-Expected or noisy changes can be filtered using `ignore_rules.json`.  
-Rules allow you to ignore specific paths or entire sections to reduce false positives.
-
----
-
-## Design Goals
-
-- Prefer structured data over raw text parsing
-- Reduce noise while highlighting meaningful change
-- Produce output that is easy to scan during incidents
-- Reflect real-world network operations workflows
 
 ---
 
