@@ -5,7 +5,8 @@ from scrapli import Scrapli
 from datetime import datetime
 from pathlib import Path
 
-CONFIG_FILE = "config/devices.yml"
+BASE_DIR = Path(__file__).resolve().parent.parent
+CONFIG_FILE = BASE_DIR / "config" / "devices.yml"
 SNAPSHOT_DIR = "diff_engine/snapshots"
 
 class DevicePoller:

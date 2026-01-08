@@ -13,8 +13,9 @@ from diff_utils_v2 import (
 )
 
 
-SNAPSHOT_DIR = "snapshots"
-DIFF_DIR = "diffs"
+DIFF_ENGINE_DIR = Path(__file__).resolve().parent
+SNAPSHOT_DIR = DIFF_ENGINE_DIR / "snapshots"
+DIFF_DIR = DIFF_ENGINE_DIR / "diffs"
 
 # ------------------------------
 # Load snapshots for a device
