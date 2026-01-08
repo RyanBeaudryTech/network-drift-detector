@@ -49,6 +49,35 @@ source .venv/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
+## Conifguration
+This project is designed to run against a Cisco-based lab environment. Configuration is handled through a small number of YAML and directory-based inputs that are included in the repository for transparency and ease of use.
+
+Device connection details are defined in:
+<pre>
+config/devices.yml
+</pre>
+
+This file specifies the devices to poll and the connection parameters used by Scrapli. Because this project is intended for a lab environment, this file is included in the repository.
+
+Example structure:
+
+```yaml
+devices:
+  - name: R1
+    host: 10.0.0.1
+    platform: cisco_iosxe
+    username: admin
+    password: admin
+    transport: ssh2
+
+  - name: R2
+    host: 10.0.0.2
+    platform: cisco_iosxe
+    username: admin
+    password: admin
+    transport: ssh2
+```
+You can modify this file to match your own lab topology or device credentials.
 
 ## Features
 
