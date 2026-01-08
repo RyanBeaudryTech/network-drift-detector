@@ -19,7 +19,7 @@ env/
 # =====================
 
 # Drift outputs
-diff_engine/diffs/
+diffs/
 diff_engine/snapshots/
 
 # Optional: ignore any temp/output files
