@@ -29,7 +29,7 @@ Clone the repository:
 ```bash
 git clone https://github.com/RyanBeaudryTech/network-drift-detector.git
 cd network-drift-detector
-
+```
 
 ### Create a virtual environment
 
