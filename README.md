@@ -49,7 +49,7 @@ source .venv/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
-## Conifguration
+## Configuration
 This project is designed to run against a Cisco-based lab environment. Configuration is handled through a small number of YAML and directory-based inputs that are included in the repository for transparency and ease of use.
 
 Device connection details are defined in:
