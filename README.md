@@ -2,8 +2,6 @@
 
 This project is a Python-based network automation tool designed to detect configuration and state drift across network devices by comparing structured snapshots over time.
 
-This tool parses command output into structured data and highlights meaningful changes to interfaces, routing, and ARP tables.
-
 This project was built and tested using a network lab environment in Cisco CML and is intended as a portfolio project demonstrating real-world network automation and operational thinking.
 
 ---
@@ -18,6 +16,34 @@ Network devices change frequently due to maintenance, automation, or human error
 - Presenting results in a clean, human-readable format
 
 ---
+
+## Requirements
+
+- Python 3.9+  
+- Git
+- Network devices reachable via SSH (Cisco-based lab used during development)
+
+## Setup
+Clone the repository:
+
+```bash
+git clone https://github.com/RyanBeaudryTech/network-drift-detector.git
+cd network-drift-detector
+
+
+### Create a virtual environment
+
+**Windows (PowerShell):**
+python -m venv .venv
+.venv\Scripts\activate
+
+**macOS / Linux:**
+python3 -m venv .venv
+source .venv/bin/activate
+
+### Install dependencies
+pip install -r requirements.txt
+
 
 ## Features
 
