@@ -1,20 +1,39 @@
-# Python
+# =====================
+# Python artifacts
+# =====================
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
 
+# Catch pycache anywhere (including diff_engine)
+**/__pycache__/
+
+# =====================
 # Virtual environments
+# =====================
 .venv/
-.env/
+venv/
+env/
 
-# Snapshots and diffs (generated data)
-snapshots/
-diffs/
+# =====================
+# Project-generated data
+# =====================
 
-# OS junk
+# Drift outputs
+diff_engine/diffs/
+diff_engine/snapshots/
+
+# Optional: ignore any temp/output files
+*.log
+
+# =====================
+# OS / editor noise
+# =====================
 .DS_Store
 Thumbs.db
-
-# IDE/editor files
 .vscode/
 .idea/
+
+# =====================
+# Config files with secrets
+# =====================
+config/devices.yml

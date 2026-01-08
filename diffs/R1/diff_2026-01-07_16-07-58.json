@@ -1,0 +1,12 @@
+[
+  {
+    "path": "/routing_table/10.1.20.0/24",
+    "type": "added",
+    "new": "O IA 10.1.20.0/24 [110/3] via 10.0.13.3, GigabitEthernet1"
+  },
+  {
+    "path": "/routing_table/10.1.10.0/24",
+    "type": "added",
+    "new": "O IA 10.1.10.0/24 [110/3] via 10.0.13.3, GigabitEthernet1"
+  }
+]

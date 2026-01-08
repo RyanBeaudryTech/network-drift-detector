@@ -1,0 +1,17 @@
+[
+  {
+    "path": "/routing_table/10.1.20.0/24",
+    "type": "added",
+    "new": "O IA 10.1.20.0/24 [110/4] via 10.0.12.1, GigabitEthernet0/0"
+  },
+  {
+    "path": "/routing_table/10.1.10.0/24",
+    "type": "added",
+    "new": "O IA 10.1.10.0/24 [110/4] via 10.0.12.1, GigabitEthernet0/0"
+  },
+  {
+    "path": "/routing_table/12.12.12.0",
+    "type": "removed",
+    "old": "S 12.12.12.0 is directly connected, Null0"
+  }
+]
